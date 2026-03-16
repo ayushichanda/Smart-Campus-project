@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Smart Campus Dashboard</title>
+
+<meta http-equiv="refresh" content="5">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<h1>Smart Campus Energy Dashboard</h1>
+
+<table border="1">
+
+<tr>
+<th>Room</th>
+<th>Temperature</th>
+<th>Power</th>
+<th>Status</th>
+</tr>
+
+{% for row in data %}
+
+<tr>
+<td>{{ row[0] }}</td>
+<td>{{ row[1] }} °C</td>
+<td>{{ row[2] }} W</td>
+<td>{{ row[3] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h2>Temperature Trend</h2>
+<canvas id="tempChart"></canvas>
+
+<h2>Power Consumption</h2>
+<canvas id="powerChart"></canvas>
+
+<h2>Energy Waste Detection</h2>
+<canvas id="wasteChart"></canvas>
+
+<script>
+
+const rooms = {{ rooms | tojson | safe }};
+const temps = {{ temps | tojson | safe }};
+const power = {{ power | tojson | safe }};
+
+const wasteRooms = {{ waste_rooms | tojson | safe }};
+const wasteCounts = {{ waste_counts | tojson | safe }};
+
+
+new Chart(document.getElementById("tempChart"), {
+    type: "line",
+    data: {
+        labels: rooms,
+        datasets: [{
+            label: "Temperature (°C)",
+            data: temps
+        }]
+    }
+});
+
+
+new Chart(document.getElementById("powerChart"), {
+    type: "bar",
+    data: {
+        labels: rooms,
+        datasets: [{
+            label: "Power (W)",
+            data: power
+        }]
+    }
+});
+
+
+new Chart(document.getElementById("wasteChart"), {
+    type: "bar",
+    data: {
+        labels: wasteRooms,
+        datasets: [{
+            label: "Energy Waste Events",
+            data: wasteCounts
+        }]
+    }
+});
+
+</script>
+
+</body>
+</html>
